@@ -26,9 +26,9 @@ bash
 
 2. Abra com a IDE VisualStudio ou pode iniciar o sistema pelo terminal:
    
-bash
+```bash
     dotnet run
-
+```
 3. Caso tenha iniciado o sistema pelo terminal, abra o navegador e vá até a URL http://localhost:5247
 
 
@@ -44,9 +44,9 @@ bash
 ## Testes Unitários
 - Pode se rodar os testes unitários pelo terminal utilizando:
   
-bash
+```bash
   dotnet test
-
+```
 
 ## Swagger
 - Acessando a url http://localhost:5247/swagger você pode encontrar todos os dois controllers e seus métodos e testá-los
