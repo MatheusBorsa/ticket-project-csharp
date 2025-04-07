@@ -1,0 +1,110 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>ticket-project</name>
+    </assembly>
+    <members>
+        <member name="T:ticket_project.Controllers.EmployeeController">
+            <summary>
+            Controlador responsável pelas operações CRUD de Funcionários
+            </summary>
+        </member>
+        <member name="M:ticket_project.Controllers.EmployeeController.#ctor(ticket_project.Data.ApplicationDbContext)">
+            <summary>
+            Construtor que injeta o contexto do banco de dados
+            </summary>
+        </member>
+        <member name="M:ticket_project.Controllers.EmployeeController.Index">
+            <summary>
+            Lista todos os funcionários cadastrados
+            </summary>
+            <returns>View com a lista de funcionários</returns>
+        </member>
+        <member name="M:ticket_project.Controllers.EmployeeController.Create">
+            <summary>
+            Exibe o formulário de criação de novo funcionário
+            </summary>
+        </member>
+        <member name="M:ticket_project.Controllers.EmployeeController.ValidateCpf(System.String,System.Nullable{System.Int32})">
+            <summary>
+            Valida o CPF conforme regras de negócio
+            </summary>
+            <param name="cpf">Número do CPF a ser validado</param>
+            <param name="employeeId">ID do funcionário (opcional para edição)</param>
+            <returns>Tuple com (valido: bool, mensagemErro: string)</returns>
+        </member>
+        <member name="M:ticket_project.Controllers.EmployeeController.Create(ticket_project.Models.Employee)">
+            <summary>
+            Cria um novo funcionário após validação
+            </summary>
+            <param name="model">Dados do funcionário a ser criado</param>
+            <returns>Redireciona para a lista ou mostra erros de validação</returns>
+        </member>
+        <member name="M:ticket_project.Controllers.EmployeeController.Edit(System.Int32)">
+            <summary>
+            Exibe o formulário de edição para um funcionário específico
+            </summary>
+            <param name="id">ID do funcionário a ser editado</param>
+        </member>
+        <member name="M:ticket_project.Controllers.EmployeeController.Edit(System.Int32,ticket_project.Models.Employee)">
+            <summary>
+            Atualiza a situação (Ativo/Inativo) de um funcionário
+            </summary>
+            <param name="id">ID do funcionário</param>
+            <param name="model">Modelo com a nova situação</param>
+            <remarks>
+            Apenas o campo Situation pode ser atualizado via este endpoint
+            </remarks>
+        </member>
+        <member name="T:ticket_project.Controllers.TicketController">
+            <summary>
+            Controlador responsável pelas operações de Tickets
+            </summary>
+        </member>
+        <member name="M:ticket_project.Controllers.TicketController.#ctor(ticket_project.Data.ApplicationDbContext)">
+            <summary>
+            Inicializa uma nova instância do controlador com o contexto do banco de dados
+            </summary>
+        </member>
+        <member name="M:ticket_project.Controllers.TicketController.Index(ticket_project.Models.ReportFilter)">
+            <summary>
+            Lista todos os tickets com opções de filtro
+            </summary>
+            <param name="filter">Filtros para pesquisa (funcionário, período, situação)</param>
+            <returns>View com a lista de tickets filtrados</returns>
+        </member>
+        <member name="M:ticket_project.Controllers.TicketController.Create">
+            <summary>
+            Exibe o formulário de criação de novo ticket
+            </summary>
+            <remarks>
+            Carrega apenas funcionários ativos ("A") para seleção
+            </remarks>
+        </member>
+        <member name="M:ticket_project.Controllers.TicketController.Create(ticket_project.Models.Ticket)">
+            <summary>
+            Cria um novo ticket no sistema
+            </summary>
+            <param name="model">Dados do ticket a ser criado</param>
+            <returns>Redireciona para a lista de tickets</returns>
+            <remarks>
+            Define automaticamente:
+            - Situação como "A" (Ativo)
+            - Data de criação como data/hora atual
+            </remarks>
+        </member>
+        <member name="M:ticket_project.Controllers.TicketController.UpdateTicket(System.Int32,System.Int32,System.String)">
+            <summary>
+            Atualiza a quantidade e situação de um ticket existente
+            </summary>
+            <param name="id">ID do ticket a ser atualizado</param>
+            <param name="quantity">Nova quantidade</param>
+            <param name="situation">Nova situação ("A" para Ativo, "I" para Inativo)</param>
+            <returns>View da lista de tickets</returns>
+            <remarks>
+            Atualiza automaticamente:
+            - Data de atualização para data/hora atual
+            </remarks>
+        </member>
+    </members>
+</doc>
