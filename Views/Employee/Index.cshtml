@@ -1,0 +1,35 @@
+@model List<ticket_project.Models.Employee>
+
+@{
+    ViewData["Title"] = "Funcionários";
+}
+
+<h2>Funcionários Cadastrados</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Nome</th>
+            <th>CPF</th>
+            <th>Situação</th>
+            <th>Ações</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var employee in Model)
+        {
+            <tr>
+                <td>@employee.Id</td>
+                <td>@employee.Name</td>
+                <td>@employee.Cpf</td>
+                <td>@(employee.Situation == "A" ? "Ativo" : "Inativo")</td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@employee.Id" class="btn btn-sm btn-primary">Editar</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<a asp-action="Create" class="btn btn-success">Novo Funcionário</a>

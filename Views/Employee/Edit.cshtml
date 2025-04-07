@@ -1,0 +1,32 @@
+@{
+    ViewData["Title"] = "Editar Funcionário";
+}
+
+@model ticket_project.Models.Employee
+
+<h2>Editar Funcionário</h2>
+
+<form asp-action="Edit" method="post">
+    <input type="hidden" asp-for="Id" />
+    
+    <div class="mb-3">
+        <label class="form-label">Nome:</label>
+        <div class="form-control-plaintext ps-0">@Model.Name</div>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">CPF:</label>
+        <div class="form-control-plaintext ps-0">@Model.Cpf</div>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Situação:</label>
+        <select asp-for="Situation" class="form-select">
+            <option value="A">Ativo</option>
+            <option value="I">Inativo</option>
+        </select>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Atualizar</button>
+    <a asp-action="Index" class="btn btn-secondary">Voltar</a>
+</form>

@@ -1,0 +1,165 @@
+@model ticket_project.Models.TicketResponseDto
+
+@{
+    ViewData["Title"] = "Relatório de Tickets";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>Relatório de Tickets</h2>
+    <a asp-action="Create" class="btn btn-success">
+        <i class="bi bi-plus-circle"></i> Novo Ticket
+    </a>
+</div>
+
+<!-- Filter Form -->
+<form asp-action="Index" method="get" class="mb-4 card card-body">
+    <div class="row g-3">
+        <div class="col-md-3">
+            <label class="form-label">Funcionário:</label>
+            <select asp-for="Filter.EmployeeId" asp-items="@(new SelectList(Model.Employees, "Id", "Name"))" class="form-select">
+                <option value="">Todos</option>
+            </select>
+        </div>
+        
+        <div class="col-md-2">
+            <label class="form-label">Data Inicial:</label>
+            <input asp-for="Filter.StartDate" type="date" class="form-control">
+        </div>
+        
+        <div class="col-md-2">
+            <label class="form-label">Data Final:</label>
+            <input asp-for="Filter.EndDate" type="date" class="form-control">
+        </div>
+        
+        <div class="col-md-2">
+            <label class="form-label">Situação:</label>
+            <select asp-for="Filter.Situation" class="form-select">
+                <option value="">Todos</option>
+                <option value="A">Ativo</option>
+                <option value="I">Inativo</option>
+            </select>
+        </div>
+        
+        <div class="col-md-3 d-flex align-items-end">
+            <button type="submit" class="btn btn-primary me-2">
+                <i class="bi bi-funnel"></i> Filtrar
+            </button>
+            <a asp-action="Index" class="btn btn-outline-secondary">
+                <i class="bi bi-arrow-counterclockwise"></i> Limpar
+            </a>
+        </div>
+    </div>
+</form>
+
+<!-- Tickets Table -->
+<div class="table-responsive">
+    <table class="table table-striped table-hover">
+        <thead class="table-dark">
+            <tr>
+                <th>ID</th>
+                <th>Funcionário</th>
+                <th>Quantidade</th>
+                <th>Situação</th>
+                <th>Data Criação</th>
+                <th>Ações</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var ticket in Model.Tickets)
+            {
+                <tr id="ticket-@ticket.Id">
+                    <td>@ticket.Id</td>
+                    <td>@ticket.Employee.Name</td>
+                    <td>
+                        <input type="number" value="@ticket.Quantity" class="form-control quantity-input" data-id="@ticket.Id" />
+                    </td>
+                    <td>
+                        <select class="form-select situation-select" data-id="@ticket.Id">
+                            <option value="A">Ativo</option>
+                            <option value="I">Inativo</option>
+                        </select>
+                    </td>
+                    <td>@ticket.CreatedAt.ToString("dd/MM/yyyy HH:mm")</td>
+                    <td>
+                        <button class="btn btn-sm btn-warning update-button" data-id="@ticket.Id">
+                            <i class="bi bi-save"></i> Atualizar
+                        </button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<!-- Summary Statistics -->
+<div class="card mt-4">
+    <div class="card-header bg-primary text-white">
+        <h5 class="mb-0">Resumo</h5>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-3">
+                <div class="card bg-light mb-3">
+                    <div class="card-body text-center">
+                        <h6 class="card-title">Total de Tickets</h6>
+                        <p class="card-text fs-4">@Model.Tickets.Count</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card bg-light mb-3">
+                    <div class="card-body text-center">
+                        <h6 class="card-title">Quantidade Total</h6>
+                        <p class="card-text fs-4">@Model.Tickets.Sum(t => t.Quantity)</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card bg-light mb-3">
+                    <div class="card-body text-center">
+                        <h6 class="card-title">Ativos</h6>
+                        <p class="card-text fs-4 text-success">@Model.Tickets.Count(t => t.Situation == "A")</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card bg-light mb-3">
+                    <div class="card-body text-center">
+                        <h6 class="card-title">Inativos</h6>
+                        <p class="card-text fs-4 text-secondary">@Model.Tickets.Count(t => t.Situation == "I")</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // Update ticket via AJAX when "Atualizar" button is clicked
+        $(".update-button").click(function () {
+            var ticketId = $(this).data("id");
+            var quantity = $("#ticket-" + ticketId + " .quantity-input").val();
+            var situation = $("#ticket-" + ticketId + " .situation-select").val();
+
+            // Make AJAX POST request to update the ticket
+            $.ajax({
+                url: '@Url.Action("UpdateTicket", "Ticket")',
+                type: 'POST',
+                data: {
+                    id: ticketId,
+                    quantity: quantity,
+                    situation: situation
+                },
+                success: function () {
+                    // Always reload the page after the request is completed
+                    location.reload(); // This will reload the page
+                },
+                error: function () {
+                    // You can optionally add a message here if needed, but the page will still reload
+                    location.reload();
+                }
+            });
+        });
+    </script>
+}
